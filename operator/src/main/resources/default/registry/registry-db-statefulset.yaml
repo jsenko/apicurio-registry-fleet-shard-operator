@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: multitenant-sr-db-registry
+spec:
+  serviceName: multitenant-sr-db-service-registry
+  selector:
+    matchLabels:
+      app: multitenant-sr-db-registry
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: multitenant-sr-db-registry
+    spec:
+      containers:
+        - name: postgresql-db
+          image: postgres:latest
+          env:
+            - name: POSTGRES_DB
+              value: multitenantsrdb
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: PGDATA
+              value: /data/pgdata
