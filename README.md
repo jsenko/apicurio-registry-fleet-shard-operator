@@ -1,0 +1,1 @@
+# apicurio-registry-fleet-shard-operator
