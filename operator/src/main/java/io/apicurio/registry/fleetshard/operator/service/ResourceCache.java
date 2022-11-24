@@ -10,9 +10,7 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class DependentResourceCache {
-
-    private Set<DependentResource> resources = new HashSet<>();
+public class ResourceCache {
 
     private Map<ResourceId, HasMetadata> resources2 = new HashMap<>();
 

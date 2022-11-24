@@ -1,6 +1,6 @@
 package io.apicurio.registry.fleetshard.operator.dependent;
 
-import io.apicurio.registry.fleetshard.operator.service.DependentResourceCache;
+import io.apicurio.registry.fleetshard.operator.service.ResourceCache;
 import io.apicurio.registry.fleetshard.operator.crd.v1.ApicurioRegistryFleetShard;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
@@ -13,14 +13,22 @@ import javax.inject.Inject;
 public class RegistryDeploymentDR extends KubernetesDependentResource<Deployment, ApicurioRegistryFleetShard> {
 
     @Inject
-    DependentResourceCache resourceCache;
+    ResourceCache resourceCache;
 
     public RegistryDeploymentDR() {
         super(Deployment.class);
     }
 
+
+
+    @Override
+    public Deployment update(Deployment actual, Deployment target, ApicurioRegistryFleetShard primary, Context<ApicurioRegistryFleetShard> context) {
+        return super.update(actual, target, primary, context);
+    }
+
     @Override
     protected Deployment desired(ApicurioRegistryFleetShard primary, Context<ApicurioRegistryFleetShard> context) {
-        return (Deployment) resourceCache.get(DependentResourceCache.ResourceId.REGISTRY_DEPLOYMENT);
+        //context.managedDependentResourceContext().
+        return (Deployment) resourceCache.get(ResourceCache.ResourceId.REGISTRY_DEPLOYMENT);
     }
 }

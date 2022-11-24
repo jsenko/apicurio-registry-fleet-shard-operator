@@ -1,7 +1,7 @@
 package io.apicurio.registry.fleetshard.operator.control.impl;
 
 import io.apicurio.registry.fleetshard.operator.control.ControlFunction;
-import io.apicurio.registry.fleetshard.operator.service.DependentResourceCache;
+import io.apicurio.registry.fleetshard.operator.service.ResourceCache;
 import io.apicurio.registry.fleetshard.operator.service.ResourceFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,7 +11,7 @@ import javax.inject.Inject;
 public class CreateRegistryDeploymentCF implements ControlFunction {
 
     @Inject
-    DependentResourceCache resourceCache;
+    ResourceCache resourceCache;
 
     @Inject
     ResourceFactory resourceFactory;
@@ -22,13 +22,13 @@ public class CreateRegistryDeploymentCF implements ControlFunction {
 
     @Override
     public boolean updateNeeded() {
-        return !resourceCache.contains(DependentResourceCache.ResourceId.REGISTRY_DEPLOYMENT);
+        return !resourceCache.contains(ResourceCache.ResourceId.REGISTRY_DEPLOYMENT);
     }
 
     @Override
     public void update() {
         var deployment = resourceFactory.createRegistryDeployment();
-        resourceCache.put(DependentResourceCache.ResourceId.REGISTRY_DEPLOYMENT, deployment);
+        resourceCache.put(ResourceCache.ResourceId.REGISTRY_DEPLOYMENT, deployment);
     }
 
     @Override
