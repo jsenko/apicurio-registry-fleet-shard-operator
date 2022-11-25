@@ -22,4 +22,8 @@ public class ResourceFactory {
     public Deployment createRegistryDeployment() {
         return loadResource("registry/registry-deployment.yaml", Deployment.class);
     }
+
+    public Deployment createTestDeployment() {
+        return loadResource("test/busybox-deployment.yaml", Deployment.class);
+    }
 }

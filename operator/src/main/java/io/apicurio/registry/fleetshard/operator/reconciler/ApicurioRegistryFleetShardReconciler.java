@@ -1,6 +1,8 @@
 package io.apicurio.registry.fleetshard.operator.reconciler;
 
-import io.apicurio.registry.fleetshard.operator.control.impl.ControlLoop;
+import io.apicurio.registry.fleetshard.CRScopeContext;
+import io.apicurio.registry.fleetshard.operator.control.ContextHolder;
+import io.apicurio.registry.fleetshard.operator.control.ControlLoop;
 import io.apicurio.registry.fleetshard.operator.crd.v1.ApicurioRegistryFleetShard;
 import io.apicurio.registry.fleetshard.operator.crd.v1.ApicurioRegistryFleetShardStatus;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
@@ -39,6 +41,9 @@ public class ApicurioRegistryFleetShardReconciler implements
     @Inject
     ControlLoop loop;
 
+    @Inject
+    ContextHolder contextHolder;
+
     @Override
     public Map<String, EventSource> prepareEventSources(EventSourceContext<ApicurioRegistryFleetShard> context) {
         var deploymentEventSource =
@@ -51,15 +56,22 @@ public class ApicurioRegistryFleetShardReconciler implements
 
     @Override
     public UpdateControl<ApicurioRegistryFleetShard> reconcile(ApicurioRegistryFleetShard schema, Context<ApicurioRegistryFleetShard> context) {
-        // TODO Context handling
-        loop.run();
-
-        return UpdateControl.noUpdate();
+        var key = schema.getMetadata().getNamespace() + "/" + schema.getMetadata().getName();
+        return CRScopeContext.getInstance().with(key, false, () -> {
+            contextHolder.setContext(context);
+            loop.run();
+            return UpdateControl.noUpdate();
+        });
     }
 
     @Override
     public DeleteControl cleanup(ApicurioRegistryFleetShard resource, Context<ApicurioRegistryFleetShard> context) {
-        return DeleteControl.defaultDelete();
+        var key = resource.getMetadata().getNamespace() + "/" + resource.getMetadata().getName();
+        return CRScopeContext.getInstance().with(key, true, () -> {
+            contextHolder.setContext(context);
+            loop.runCleanup();
+            return DeleteControl.defaultDelete();
+        });
     }
 
     @Override

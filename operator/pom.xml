@@ -42,6 +42,13 @@
 
     <dependencies>
 
+        <!-- Project -->
+        <dependency>
+            <groupId>io.apicurio</groupId>
+            <artifactId>apicurio-registry-fleet-shard-operator-crd-scope-extension</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Java Operator SDK -->
         <dependency>
             <groupId>io.javaoperatorsdk</groupId>

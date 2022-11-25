@@ -1,15 +1,12 @@
 package io.apicurio.registry.fleetshard.operator.service;
 
+import io.apicurio.registry.fleetshard.CRScoped;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.javaoperatorsdk.operator.api.reconciler.dependent.DependentResource;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import javax.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
+@CRScoped
 public class ResourceCache {
 
     private Map<ResourceId, HasMetadata> resources2 = new HashMap<>();

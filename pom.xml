@@ -41,6 +41,9 @@
 
     <modules>
         <module>operator</module>
+        <module>crd-scope-extension/deployment</module>
+        <module>crd-scope-extension/runtime</module>
+        <module>crd-scope-extension/integration-tests</module>
     </modules>
 
     <properties>
@@ -56,7 +59,7 @@
         <quarkus.profile>dev</quarkus.profile>
 
         <!-- Versions -->
-        <version.quarkus>2.14.0.Final</version.quarkus>
+        <version.quarkus>2.14.1.Final</version.quarkus>
         <version.javaoperatorsdk>4.1.1</version.javaoperatorsdk>
         <version.quarkusoperatorsdk>4.0.5</version.quarkusoperatorsdk>
         <version.jib-maven-plugin>3.3.1</version.jib-maven-plugin>
@@ -69,9 +72,12 @@
         <version.plugin.compiler>3.10.1</version.plugin.compiler>
         <version.plugin.javadoc>3.4.1</version.plugin.javadoc>
         <version.plugin.source>3.2.1</version.plugin.source>
-        <version.plugin.surefire>2.22.2</version.plugin.surefire>
+        <version.plugin.surefire>3.0.0-M7</version.plugin.surefire>
         <version.plugin.checkstyle>3.2.0</version.plugin.checkstyle>
         <version.plugin.properties>1.1.0</version.plugin.properties>
+
+
+        <version.plugin.failsafe>${version.plugin.surefire}</version.plugin.failsafe>
 
     </properties>
 
@@ -122,21 +128,30 @@
     <build>
         <pluginManagement>
             <plugins>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
                     <version>${version.plugin.properties}</version>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${version.plugin.compiler}</version>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
+                    </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>${version.plugin.source}</version>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -144,9 +159,27 @@
                 </plugin>
 
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${version.plugin.surefire}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                            <maven.home>${maven.home}</maven.home>
+                            <maven.repo>${settings.localRepository}</maven.repo>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${version.plugin.failsafe}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                            <maven.home>${maven.home}</maven.home>
+                            <maven.repo>${settings.localRepository}</maven.repo>
+                        </systemPropertyVariables>
+                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -154,35 +187,38 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${version.plugin.checkstyle}</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.jboss.jandex</groupId>
-                    <artifactId>jandex-maven-plugin</artifactId>
-                    <version>${jandex.version}</version>
-                    <executions>
-                        <execution>
-                            <id>make-index</id>
-                            <goals>
-                                <goal>jandex</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+
+<!--                <plugin>-->
+<!--                    <groupId>org.jboss.jandex</groupId>-->
+<!--                    <artifactId>jandex-maven-plugin</artifactId>-->
+<!--                    <version>${jandex.version}</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>make-index</id>-->
+<!--                            <goals>-->
+<!--                                <goal>jandex</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
+
                 <plugin>
                     <groupId>io.quarkus</groupId>
                     <artifactId>quarkus-maven-plugin</artifactId>
-                    <version>${quarkus.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${version.dependency.plugin}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${version.assembly.plugin}</version>
+                    <version>${version.quarkus}</version>
                 </plugin>
 
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                    <version>${version.dependency.plugin}</version>-->
+<!--                </plugin>-->
+
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-assembly-plugin</artifactId>-->
+<!--                    <version>${version.assembly.plugin}</version>-->
+<!--                </plugin>-->
 
             </plugins>
         </pluginManagement>
@@ -268,21 +304,21 @@
                     </dependency>
                 </dependencies>
                 <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <configLocation>.checkstyle/simple.xml</configLocation>
-                            <headerLocation>.checkstyle/java.header</headerLocation>
-                            <suppressionsLocation>.checkstyle/suppressions.xml</suppressionsLocation>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>validate</id>-->
+<!--                        <phase>validate</phase>-->
+<!--                        <configuration>-->
+<!--                            <configLocation>.checkstyle/simple.xml</configLocation>-->
+<!--                            <headerLocation>.checkstyle/java.header</headerLocation>-->
+<!--                            <suppressionsLocation>.checkstyle/suppressions.xml</suppressionsLocation>-->
+<!--                            <includeTestSourceDirectory>true</includeTestSourceDirectory>-->
+<!--                            <consoleOutput>true</consoleOutput>-->
+<!--                            <failsOnError>true</failsOnError>-->
+<!--                        </configuration>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>

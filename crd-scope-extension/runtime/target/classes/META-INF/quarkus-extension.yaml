@@ -1,0 +1,12 @@
+---
+metadata:
+  built-with-quarkus-core: "2.14.1.Final"
+  extension-dependencies:
+  - "io.quarkus:quarkus-arc"
+  - "io.quarkus:quarkus-core"
+group-id: "org.acme"
+artifact-id: "extension"
+version: "999-SNAPSHOT"
+name: "app-extension"
+artifact: "io.apicurio:apicurio-registry-fleet-shard-operator-crd-scope-extension::jar:999-SNAPSHOT"
+description: "Do something useful."
