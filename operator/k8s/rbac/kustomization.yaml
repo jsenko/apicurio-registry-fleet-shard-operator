@@ -1,0 +1,5 @@
+resources:
+  - resources/operator.serviceaccount.yaml
+  - resources/operator.clusterrole.yaml
+  - resources/operator.clusterrolebinding.yaml
+  - resources/fleetshard-editor.clusterrole.yaml

@@ -18,7 +18,7 @@ import javax.enterprise.context.spi.CreationalContext;
 
 public class CRScopeContext implements InjectableContext { // InjectableContext extends AlterableContext extends Context
 
-    private final Map<String, Scope> SCOPES = new ConcurrentHashMap<>();
+    private static final Map<String, Scope> SCOPES = new ConcurrentHashMap<>();
 
     static final ThreadLocal<String> ACTIVE_SCOPE_KEY_ON_THREAD = new ThreadLocal<>();
 
@@ -108,31 +108,37 @@ public class CRScopeContext implements InjectableContext { // InjectableContext 
         if (activeScope.isPresent()) {
             throw new IllegalStateException("An instance of this scope is already active");
         }
-
-        var newScope = new Scope();
-        SCOPES.put(key, newScope);
+        SCOPES.computeIfAbsent(key, _key -> new Scope());
         ACTIVE_SCOPE_KEY_ON_THREAD.set(key);
     }
 
     public void exit(boolean delete) {
-        var activeScope = getActiveScope();
 
-        if (activeScope.isEmpty()) {
+        if (getActiveScope().isEmpty()) {
             throw new IllegalStateException("Scope currently not active");
         }
 
         if (delete) {
             SCOPES.remove(ACTIVE_SCOPE_KEY_ON_THREAD.get());
         }
-        ACTIVE_SCOPE_KEY_ON_THREAD.set(null);
+        ACTIVE_SCOPE_KEY_ON_THREAD.remove();
     }
 
-    public <R> R with(String key, boolean delete, Supplier<R> f) {
+    public <R> R with(String key, Supplier<R> f) {
         try {
             this.enter(key);
             return f.get();
         } finally {
-            this.exit(delete);
+            this.exit(false);
+        }
+    }
+
+    public <R> R withCleanup(String key, Supplier<R> f) {
+        try {
+            this.enter(key);
+            return f.get();
+        } finally {
+            this.exit(true);
         }
     }
 

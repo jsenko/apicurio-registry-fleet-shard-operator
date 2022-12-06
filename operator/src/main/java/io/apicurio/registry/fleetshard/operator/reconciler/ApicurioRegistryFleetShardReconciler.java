@@ -56,8 +56,7 @@ public class ApicurioRegistryFleetShardReconciler implements
 
     @Override
     public UpdateControl<ApicurioRegistryFleetShard> reconcile(ApicurioRegistryFleetShard schema, Context<ApicurioRegistryFleetShard> context) {
-        var key = schema.getMetadata().getNamespace() + "/" + schema.getMetadata().getName();
-        return CRScopeContext.getInstance().with(key, false, () -> {
+        return CRScopeContext.getInstance().with(schema.getCRScopeKey(), () -> {
             contextHolder.setContext(context);
             loop.run();
             return UpdateControl.noUpdate();
@@ -65,9 +64,8 @@ public class ApicurioRegistryFleetShardReconciler implements
     }
 
     @Override
-    public DeleteControl cleanup(ApicurioRegistryFleetShard resource, Context<ApicurioRegistryFleetShard> context) {
-        var key = resource.getMetadata().getNamespace() + "/" + resource.getMetadata().getName();
-        return CRScopeContext.getInstance().with(key, true, () -> {
+    public DeleteControl cleanup(ApicurioRegistryFleetShard schema, Context<ApicurioRegistryFleetShard> context) {
+        return CRScopeContext.getInstance().withCleanup(schema.getCRScopeKey(), () -> {
             contextHolder.setContext(context);
             loop.runCleanup();
             return DeleteControl.defaultDelete();

@@ -6,7 +6,7 @@ import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 
 public class ApplicationExtensionProcessor {
-    static final String FEATURE_NAME = "app-extension";
+    static final String FEATURE_NAME = "apicurio-registry-fleet-shard-operator-cdr-scope-extension";
 
     @BuildStep
     FeatureBuildItem createFeatureItem() {
@@ -14,7 +14,7 @@ public class ApplicationExtensionProcessor {
     }
 
     @BuildStep
-    public ContextConfiguratorBuildItem transactionContext(ContextRegistrationPhaseBuildItem item) {
+    public ContextConfiguratorBuildItem customContext(ContextRegistrationPhaseBuildItem item) {
         return new ContextConfiguratorBuildItem(
                 item.getContext()
                         .configure(CRScoped.class)
