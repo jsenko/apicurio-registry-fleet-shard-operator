@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= quay.io/jsenkorh/apicurio-registry-fleet-shard-operator:latest-snapshot
 
 all: docker-build
 
@@ -16,6 +16,11 @@ all: docker-build
 # https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters
 # More info on the awk command:
 # http://linuxcommand.org/lc3_adv_awk.php
+
+
+
+
+
 
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
@@ -41,3 +46,12 @@ deploy: ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	kubectl delete -f target/kubernetes/kubernetes.yml
+
+build:
+	mvn clean package -Dquarkus.container-image.build=true
+#		-Dquarkus.container-image.push=true \
+#		-Dquarkus.container-image.registry=<your container registry. Example: quay.io> \
+#		-Dquarkus.container-image.group=<your container registry namespace> \
+#		-Dquarkus.kubernetes.namespace=<the kubernetes namespace where you will deploy the operator> \
+#		-Dquarkus.operator-sdk.bundle.package-name=<the name of the package that bundle image belongs to> \
+#		-Dquarkus.operator-sdk.bundle.channels=<the list of channels that bundle image belongs to>

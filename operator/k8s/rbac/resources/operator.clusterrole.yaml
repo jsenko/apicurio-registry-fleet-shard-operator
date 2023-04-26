@@ -22,11 +22,3 @@ rules:
     verbs:
       - get
       - list
-  - apiGroups:
-      - registry.apicur.io
-    resources:
-      - fleetshards/status
-    verbs:
-      - get
-      - patch
-      - update

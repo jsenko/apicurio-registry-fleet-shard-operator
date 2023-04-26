@@ -7,11 +7,7 @@ rules:
       - registry.apicur.io
     resources:
       - fleetshards
+      - fleetshards/status
+      - fleetshards/finalizers
     verbs:
       - "*"
-  - apiGroups:
-      - registry.apicur.io
-    resources:
-      - fleetshards/status
-    verbs:
-      - get

@@ -2,8 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 commonLabels:
-  apicur.io/name: apicurio-registry-fleet-shard-operator
+  app.kubernetes.io/name: apicurio-registry-fleet-shard-operator
+  app.kubernetes.io/version: latest-snapshot
   apicur.io/type: operator
+  apicur.io/name: apicurio-registry-fleet-shard-operator
   apicur.io/version: latest-snapshot
 
 namespace: apicurio-namespace

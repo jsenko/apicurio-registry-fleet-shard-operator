@@ -11,10 +11,20 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>apicurio-registry-fleet-shard-operator-cdr-scope-extension-deployment</artifactId>
+    <artifactId>apicurio-registry-fleet-shard-operator-crd-scope-extension-deployment</artifactId>
     <name>Apicurio Registry Fleet Shard Operator - CRD Extension - Deployment</name>
 
     <dependencies>
+
+        <!-- Project Dependencies -->
+
+        <dependency>
+            <groupId>io.apicurio</groupId>
+            <artifactId>apicurio-registry-fleet-shard-operator-crd-scope-extension</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Quarkus Dependencies -->
 
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -24,18 +34,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-core-deployment</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.apicurio</groupId>
-            <artifactId>apicurio-registry-fleet-shard-operator-crd-scope-extension</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5-internal</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

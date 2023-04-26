@@ -22,21 +22,10 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>io.apicurio</groupId>-->
-<!--            <artifactId>apicurio-registry-fleet-shard-operator-cdr-scope-extension-deployment</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 
     <build>
         <plugins>
-
-<!--            <plugin>-->
-<!--                <groupId>io.quarkus</groupId>-->
-<!--                <artifactId>quarkus-bootstrap-maven-plugin</artifactId>-->
-<!--            </plugin>-->
 
             <plugin>
                 <groupId>io.quarkus</groupId>
@@ -49,7 +38,7 @@
                             <goal>extension-descriptor</goal>
                         </goals>
                         <configuration>
-                            <deployment>${project.groupId}:apicurio-registry-fleet-shard-operator-cdr-scope-extension-deployment:${project.version}
+                            <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}
                             </deployment>
                         </configuration>
                     </execution>

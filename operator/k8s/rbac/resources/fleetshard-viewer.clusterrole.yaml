@@ -15,5 +15,6 @@ rules:
       - registry.apicur.io
     resources:
       - fleetshards/status
+      - fleetshards/finalizers
     verbs:
       - get

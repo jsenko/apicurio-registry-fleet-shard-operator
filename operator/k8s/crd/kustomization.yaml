@@ -1,2 +1,2 @@
 resources:
-  - resources/registry.apicur.io_apicurioregistries.yaml # TODO
+  - resources/fleetshards.registry.apicur.io-v1.yml
